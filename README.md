@@ -1,5 +1,10 @@
 # simple-keyboard-input-mask
 
 This is an **experimental** input mask module for simple-keyboard.
-To see an example, check out this file:
+
+## Installation
+`npm install simple-keyboard-input-mask --save`
+
+Want to see an example? Check out these demos:
+https://codesandbox.io/s/xp895w7kpp
 https://github.com/hodgef/simple-keyboard-input-mask/blob/master/src/demo/App.js
