@@ -1,6 +1,6 @@
 {
   "name": "simple-keyboard-input-mask",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Input mask module for simple-keyboard",
   "main": "build/index.js",
   "scripts": {
@@ -89,7 +89,8 @@
     "webpack-dev-server": "3.1.14",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.3",
-    "simple-keyboard": "latest"
+    "simple-keyboard": "latest",
+    "react-simple-keyboard": "latest"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -152,8 +153,5 @@
     "presets": [
       "react-app"
     ]
-  },
-  "dependencies": {
-    "react-simple-keyboard": "^1.15.2"
   }
 }
