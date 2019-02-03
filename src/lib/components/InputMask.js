@@ -8,11 +8,20 @@ class SimpleKeyboardInputMask {
           return false;
         }
 
+        if(!keyboard.options.disableCaretPositioning){
+          console.warn("SimpleKeyboardInputMask: Caret placement is not supported in this release. Option disableCaretPositioning will be enabled. To disable this warning, set option disableCaretPositioning to true.");
+          keyboard.options.disableCaretPositioning = true;
+        }
+
+        module.currentButton = '';
         module.fn = {};
+
         module.fn.getUpdatedInput = keyboard.utilities.getUpdatedInput;
 
         keyboard.utilities.getUpdatedInput = (button, input, options, caretPos, moveCaret) => {
+
           let inputMask = keyboard.options.inputMask;
+          let resultingInput = '';
 
           if(
             inputMask && (typeof inputMask === "object" || typeof inputMask === "string") &&
@@ -28,21 +37,23 @@ class SimpleKeyboardInputMask {
             }
             
             let overrides = module.autoAddSymbol(caretPos, input, inputMaskStr, button);
-            
+
             input = overrides.input || input;
             caretPos =  overrides.caretPos || caretPos;
 
             let inputProposal = module.fn.getUpdatedInput(button, input, options, caretPos, false);
 
             if(module.validateInputProposal(inputProposal, inputMaskStr, caretPos)){
-              return module.fn.getUpdatedInput(button, input, options, caretPos, moveCaret);
+              resultingInput = module.fn.getUpdatedInput(button, input, options, caretPos, moveCaret);
             } else {
-              return keyboard.getInput();
+              resultingInput = keyboard.getInput();
             }
 
           } else {
-            return module.fn.getUpdatedInput(button, input, options, caretPos, moveCaret);
+            resultingInput = module.fn.getUpdatedInput(button, input, options, caretPos, moveCaret);
           }
+
+          return resultingInput;
         }
 
         module.validateInputProposal = (inputProposal, inputMask, caretPos) => {
@@ -54,27 +65,8 @@ class SimpleKeyboardInputMask {
             let validated = true;
             let i = caretPos || 0;
 
-            if(
-              (
-                // When caret at the beginning
-                (
-                  caretPos === 0 ||
-                  // When caret is not at max *and* there's no next char already present
-                  caretPos < inputProposal.length
-                ) && !inputProposal[caretPos + 1]
-                // When max reched
-              ) || inputMask.length === inputProposal.length - 1
-            ){
-              for(i = 0; i < inputPropArr.length; i++){
-                let charCompareRes = module.isCharAllowed(inputPropArr[i], inputMask[i]);
-  
-                if(!charCompareRes){  
-                  validated = false;
-                  return false;
-  
-  
-                }
-              }
+            for(i = 0; i < inputPropArr.length; i++){
+              validated = module.isCharAllowed(inputPropArr[i], inputMask[i]);
             }
 
             return validated;
@@ -84,7 +76,7 @@ class SimpleKeyboardInputMask {
         }
 
         module.isCharAllowed = (character, maskCharacter) => {
-          if(!(character && maskCharacter)){
+          if(!(character && maskCharacter) && character !== "0"){
             return false;
           }
 
@@ -123,10 +115,13 @@ class SimpleKeyboardInputMask {
 
         module.isNumber = (input) => {
           return (
-            // If char is a number
-            !isNaN(Number(input)) &&
-            // If char is not a whitespace
-            input.match(/^\s$/) === null
+            input === "0" ||
+            (
+              // If char is a number
+              !isNaN(Number(input)) &&
+              // If char is not a whitespace
+              input.match(/^\s$/) === null
+            )
           );
         }
 
@@ -167,10 +162,13 @@ class SimpleKeyboardInputMask {
               inputMaskArr[i] &&
               !module.isNumber(inputMaskArr[i]) &&
               !module.isLetter(inputMaskArr[i]) &&
-              Number(button)
+              (Number(button) || Number(button) === 0)
             ){
               input = keyboard.utilities.addStringAt(input, inputMaskArr[i], i, false);
-              keyboard.caretPosition = keyboard.caretPosition ? keyboard.caretPosition+1 : 1;
+
+              if(!keyboard.options.disableCaretPositioning){
+                keyboard.caretPosition = keyboard.caretPosition ? keyboard.caretPosition+1 : 1;
+              }
             } else {
               break;
             }

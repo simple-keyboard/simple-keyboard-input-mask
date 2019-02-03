@@ -14,10 +14,13 @@ class App {
 
   onDOMLoaded = async () => {
     this.keyboard = new Keyboard({
-      debug: true,
       onChange: input => this.onChange(input),
       onKeyPress: button => this.onKeyPress(button),
       inputMask: "(99) 9999-9999",
+      onInputMaskRejection: (button) => {
+        console.log(`Input rejected: ${typeof button} (${button})`);
+      },
+      // Pattern to compare letters. Default pattern /[a-z]/i
       //letterCheckPattern: /[a-z]/i,
       modules: [
         inputMask
