@@ -72,9 +72,6 @@ class App extends Component {
           onKeyPress={button => this.onKeyPress(button)}
           disableCaretPositioning={true}
           inputMask={"(99) 9999-9999"}
-          onInputMaskRejection={(button) => {
-            console.log(`Input rejected: ${typeof button} (${button})`);
-          }}
           // Pattern to compare letters. Default pattern /[a-z]/i
           //letterCheckPattern{/[a-z]/i},
           modules={[inputMask]}
