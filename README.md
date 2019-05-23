@@ -1,12 +1,15 @@
-# simple-keyboard-input-mask
+<a href="https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/" title="See demo" target="_blank"><img src="https://franciscohodge.com/project-pages/simple-keyboard/images/iptMaskprojectHeadingX4series.png" width="100%"></a>
 
-This is an **experimental** input mask module for simple-keyboard.
+[![Build Status](https://travis-ci.org/hodgef/simple-keyboard-input-mask.svg?branch=master)](https://travis-ci.org/hodgef/simple-keyboard-input-mask)
+  
+## ✨ Demo
 
-## Installation
-`npm install simple-keyboard-input-mask --save`
+[Input Mask module demo](https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/)
 
-## Usage
-Want to see an example? Check out these demos:
+## 📦 Installation & Usage
 
-- https://codesandbox.io/s/github/simple-keyboard/react-simple-keyboard-input-mask-demo/tree/master/
-- https://github.com/hodgef/simple-keyboard-input-mask/blob/master/src/demo/App.js
+Check out the [Getting Started](https://franciscohodge.com/projects/simple-keyboard/modules/input-mask/) docs to begin.
+
+## 📃 Options and Customization
+
+To fully customize your virtual keyboard, check out the main [simple-keyboard repository](https://github.com/hodgef/simple-keyboard).
