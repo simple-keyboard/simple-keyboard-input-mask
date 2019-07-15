@@ -1,6 +1,8 @@
 <a href="https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/" title="See demo" target="_blank"><img src="https://franciscohodge.com/project-pages/simple-keyboard/images/iptMaskprojectHeadingX4series.png" width="100%"></a>
 
 [![Build Status](https://travis-ci.org/hodgef/simple-keyboard-input-mask.svg?branch=master)](https://travis-ci.org/hodgef/simple-keyboard-input-mask)
+
+> **Have an issue or question? [Please post it in the simple-keyboard repository.](https://github.com/hodgef/simple-keyboard/issues)**
   
 ## ✨ Demo
 
