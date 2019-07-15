@@ -23,7 +23,6 @@ class SimpleKeyboardInputMask {
       keyboard.utilities.getUpdatedInput = (
         button,
         input,
-        options,
         caretPos,
         moveCaret
       ) => {
@@ -58,7 +57,6 @@ class SimpleKeyboardInputMask {
           let inputProposal = module.fn.getUpdatedInput(
             button,
             input,
-            options,
             caretPos,
             false
           );
@@ -69,7 +67,6 @@ class SimpleKeyboardInputMask {
             resultingInput = module.fn.getUpdatedInput(
               button,
               input,
-              options,
               caretPos,
               moveCaret
             );
@@ -80,7 +77,6 @@ class SimpleKeyboardInputMask {
           resultingInput = module.fn.getUpdatedInput(
             button,
             input,
-            options,
             caretPos,
             moveCaret
           );

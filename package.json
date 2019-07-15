@@ -1,6 +1,6 @@
 {
   "name": "simple-keyboard-input-mask",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Input mask module for simple-keyboard",
   "main": "build/index.js",
   "scripts": {
@@ -46,7 +46,7 @@
     "jest": "^24.8.0",
     "prettier": "^1.18.2",
     "prettier-webpack-plugin": "^1.2.0",
-    "simple-keyboard": "^2.23.1",
+    "simple-keyboard": "^2.24.1",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.0",
     "webpack": "^4.34.0",
