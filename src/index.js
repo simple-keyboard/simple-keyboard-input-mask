@@ -89,7 +89,8 @@ class SimpleKeyboardInputMask {
         if (
           inputProposal &&
           typeof inputProposal === "string" &&
-          inputMask && typeof inputProposal === "string"
+          inputMask &&
+          typeof inputProposal === "string"
         ) {
           let inputPropArr = inputProposal.split("");
           let validated = true;
