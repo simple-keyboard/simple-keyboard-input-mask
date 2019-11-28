@@ -8,6 +8,7 @@ let keyboard = new Keyboard({
   onModulesLoaded: () => {
     console.log("Module loaded!");
   },
+  //debug: true,
   inputMask: "(99) 9999-9999",
   inputMaskPhysicalKeyboardHandling: true,
   inputMaskTargetClass: "input",

@@ -99,6 +99,9 @@ class SimpleKeyboardInputMask {
         if (keyboard.options.debug) console.log("input", e);
 
         let layoutKey = keyboard.physicalKeyboard.getSimpleKeyboardLayoutKey(e);
+        if (layoutKey && layoutKey.includes("numpad"))
+          layoutKey = layoutKey.replace("numpad", "");
+
         let buttonElement =
           keyboard.getButtonElement(layoutKey) ||
           keyboard.getButtonElement(`{${layoutKey}}`);
@@ -106,6 +109,13 @@ class SimpleKeyboardInputMask {
         if (buttonElement) {
           let isFctBtn = buttonElement.classList.contains("hg-functionBtn");
           let layoutKeyFormatted = isFctBtn ? `{${layoutKey}}` : layoutKey;
+
+          if (
+            isFctBtn &&
+            (layoutKey.includes("shift") || layoutKey.includes("caps"))
+          ) {
+            return false;
+          }
 
           if (keyboard.options.debug)
             console.log("layoutKeyFormatted", layoutKeyFormatted);
