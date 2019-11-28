@@ -47,7 +47,7 @@ function onKeyPress(button) {
   /**
    * If you want to handle the shift and caps lock buttons
    */
-  if (button === "{shift}" || button === "{lock}") handleShift();
+  if (button === "{shiftleft}" || button === "{shiftright}" || button === "{capslock}") handleShift();
 }
 
 function handleShift() {
