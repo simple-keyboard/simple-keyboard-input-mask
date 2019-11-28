@@ -15,17 +15,7 @@ class SimpleKeyboardInputMask {
         keyboard.options.disableCaretPositioning = true;
       }
 
-      module.currentButton = "";
-      module.fn = {};
-
-      module.fn.getUpdatedInput = keyboard.utilities.getUpdatedInput;
-
-      keyboard.utilities.getUpdatedInput = (
-        button,
-        input,
-        caretPos,
-        moveCaret
-      ) => {
+      module.getMaskedInput = (button, input, caretPos, moveCaret) => {
         let inputMask = keyboard.options.inputMask;
         let resultingInput = "";
 
@@ -83,6 +73,58 @@ class SimpleKeyboardInputMask {
         }
 
         return resultingInput;
+      };
+
+      module.inputClass = keyboard.options.inputMaskTargetClass || "input";
+      module.currentButton = "";
+      module.fn = {};
+
+      module.fn.getUpdatedInput = keyboard.utilities.getUpdatedInput;
+
+      keyboard.utilities.getUpdatedInput = (
+        button,
+        input,
+        caretPos,
+        moveCaret
+      ) => {
+        return module.getMaskedInput(button, input, caretPos, moveCaret);
+      };
+
+      module.onKeyPressed = e => {
+        let isInputTarget = e.target.classList.contains(module.inputClass);
+        if (!isInputTarget) return false;
+
+        if (keyboard.options.debug) console.log("isInputTarget", isInputTarget);
+
+        if (keyboard.options.debug) console.log("input", e);
+
+        let layoutKey = keyboard.physicalKeyboard.getSimpleKeyboardLayoutKey(e);
+        let buttonElement =
+          keyboard.getButtonElement(layoutKey) ||
+          keyboard.getButtonElement(`{${layoutKey}}`);
+
+        if (buttonElement) {
+          let isFctBtn = buttonElement.classList.contains("hg-functionBtn");
+          let layoutKeyFormatted = isFctBtn ? `{${layoutKey}}` : layoutKey;
+
+          if (keyboard.options.debug)
+            console.log("layoutKeyFormatted", layoutKeyFormatted);
+
+          keyboard.handleButtonClicked(layoutKeyFormatted);
+
+          e.target.value = "";
+          e.target.value = keyboard.getInput();
+        }
+
+        if (keyboard.options.debug) console.log(layoutKey, buttonElement);
+      };
+
+      module.initInputHandling = () => {
+        document.addEventListener("keyup", module.onKeyPressed);
+      };
+
+      module.destroy = () => {
+        document.removeEventListener("keyup", module.onKeyPressed);
       };
 
       module.validateInputProposal = (inputProposal, inputMask, caretPos) => {
@@ -209,6 +251,13 @@ class SimpleKeyboardInputMask {
           caretPos: keyboard.caretPosition
         };
       };
+
+      /**
+       * Initializing listeners
+       */
+      if (keyboard.options.inputMaskPhysicalKeyboardHandling) {
+        module.initInputHandling();
+      }
     });
   };
 }

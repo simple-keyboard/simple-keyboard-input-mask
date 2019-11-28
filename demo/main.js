@@ -8,15 +8,33 @@ let keyboard = new Keyboard({
   onModulesLoaded: () => {
     console.log("Module loaded!");
   },
-  inputMask: "(99) 9999-9999"
+  inputMask: "(99) 9999-9999",
+  inputMaskPhysicalKeyboardHandling: true,
+  inputMaskTargetClass: "input",
+  layout: {
+    default: [
+      "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
+      "{tab} q w e r t y u i o p [ ] \\",
+      "{capslock} a s d f g h j k l ; ' {enter}",
+      "{shiftleft} z x c v b n m , . / {shiftright}",
+      ".com @ {space}"
+    ],
+    shift: [
+      "~ ! @ # $ % ^ & * ( ) _ + {backspace}",
+      "{tab} Q W E R T Y U I O P { } |",
+      '{capslock} A S D F G H J K L : " {enter}',
+      "{shiftleft} Z X C V B N M < > ? {shiftright}",
+      ".com @ {space}"
+    ]
+  }
 });
 
 /**
  * Update simple-keyboard when input is changed directly
  */
-document.querySelector(".input").addEventListener("input", event => {
+/*document.querySelector(".input").addEventListener("input", event => {
   keyboard.setInput(event.target.value);
-});
+});*/
 
 function onChange(input) {
   document.querySelector(".input").value = input;
