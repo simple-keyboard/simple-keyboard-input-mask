@@ -1,5 +1,7 @@
 <a href="https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/" title="See demo" target="_blank"><img src="https://franciscohodge.com/project-pages/simple-keyboard/images/iptMaskprojectHeadingX4series.png" width="100%"></a>
 
+<blockquote>Input mask module for simple-keyboard</blockquote>
+
  <a href="https://github.com/hodgef/simple-keyboard-input-mask/actions">
      <img alt="Build Status" src="https://github.com/hodgef/simple-keyboard-input-mask/workflows/Build/badge.svg?color=green" />
   </a>
