@@ -8,8 +8,6 @@
      <img alt="Publish Status" src="https://github.com/hodgef/simple-keyboard-input-mask/workflows/Publish/badge.svg?color=green" />
   </a>
 
-<blockquote><strong>Have an issue or question? <a href="https://github.com/hodgef/simple-keyboard/issues">Please post it in the simple-keyboard repository.</a>**</strong></blockquote>
-  
 ## ✨ Demo
 
 [Input Mask module demo](https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/)
