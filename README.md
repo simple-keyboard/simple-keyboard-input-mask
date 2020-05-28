@@ -1,4 +1,4 @@
-<a href="https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/" title="See demo" target="_blank"><img src="https://franciscohodge.com/project-pages/simple-keyboard/images/iptMaskprojectHeadingX4series.png" width="100%"></a>
+<a href="https://hodgef.com/simple-keyboard/modules/input-mask/" title="See demo" target="_blank"><img src="https://i.imgur.com/zfAs7as.png" width="100%"></a>
 
 <blockquote>Input mask module for simple-keyboard</blockquote>
 
@@ -12,11 +12,11 @@
 
 ## ✨ Demo
 
-[Input Mask module demo](https://franciscohodge.com/projects/simple-keyboard/demo-showcase/module-input-mask/)
+[Input Mask module demo](https://hodgef.com/simple-keyboard/editor/?d=simple-keyboard/simple-keyboard-input-mask-npm/tree/master)
 
 ## 📦 Installation & Usage
 
-Check out the [Getting Started](https://franciscohodge.com/projects/simple-keyboard/modules/input-mask/) docs to begin.
+Check out the [Getting Started](https://hodgef.com/simple-keyboard/modules/input-mask/) docs to begin.
 
 ## 📃 Options and Customization
 
