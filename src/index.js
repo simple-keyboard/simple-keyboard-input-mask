@@ -1,6 +1,10 @@
 class SimpleKeyboardInputMask {
   init = keyboard => {
     keyboard.registerModule("inputMask", module => {
+      module.inputClass = keyboard.options.inputMaskTargetClass || "input";
+      module.currentButton = "";
+      module.fn = {};
+
       if (!keyboard.options.inputMask) {
         console.warn(
           "SimpleKeyboardInputMask: You must provide the inputMask option with your input mask"
@@ -15,87 +19,135 @@ class SimpleKeyboardInputMask {
         keyboard.options.disableCaretPositioning = true;
       }
 
-      module.getMaskedInput = (button, input, caretPos, moveCaret) => {
-        let inputMask = keyboard.options.inputMask;
+      module.isMaskingEnabled = () => {
+        const { inputMask } = keyboard.options;
+        return !!(
+          typeof inputMask === "object" &&
+          inputMask[keyboard.options.inputName] &&
+          inputMask[keyboard.options.inputName].mask &&
+          inputMask[keyboard.options.inputName].regex
+        );
+      };
+
+      module.getInputMaskStr = () => {
+        const { inputMask, inputName } = keyboard.options;
+        return module.isMaskingEnabled() ? inputMask[inputName].mask : "";
+      };
+
+      module.getInputMaskRegex = () => {
+        const { inputMask, inputName } = keyboard.options;
+        return module.isMaskingEnabled() ? inputMask[inputName].regex : "";
+      };
+
+      /**
+       * getMaskedInput
+       */
+      module.getMaskedInput = (button, input, caretPos) => {
+        let overrides = module.autoAddSymbol(caretPos, input, button);
         let resultingInput = "";
 
-        if (
-          inputMask &&
-          (typeof inputMask === "object" || typeof inputMask === "string") &&
-          !module.isBksp(button) &&
-          moveCaret
-        ) {
-          let inputMaskStr;
+        input = overrides.input || input;
+        caretPos = overrides.caretPos || caretPos;
 
-          if (typeof inputMask === "object") {
-            inputMaskStr =
-              keyboard.options.inputMask[keyboard.options.inputName];
-          } else {
-            inputMaskStr = inputMask;
-          }
+        let inputProposal = module.fn.getUpdatedInput(
+          button,
+          input,
+          caretPos,
+          caretPos,
+          false
+        );
 
-          let overrides = module.autoAddSymbol(
-            caretPos,
-            input,
-            inputMaskStr,
-            button
-          );
-
-          input = overrides.input || input;
-          caretPos = overrides.caretPos || caretPos;
-
-          let inputProposal = module.fn.getUpdatedInput(
-            button,
-            input,
-            caretPos,
-            false
-          );
-
-          if (
-            module.validateInputProposal(inputProposal, inputMaskStr, caretPos)
-          ) {
-            resultingInput = module.fn.getUpdatedInput(
-              button,
-              input,
-              caretPos,
-              moveCaret
-            );
-          } else {
-            resultingInput = keyboard.getInput();
-          }
-        } else {
+        if (module.validateInputProposal(inputProposal, caretPos)) {
           resultingInput = module.fn.getUpdatedInput(
             button,
             input,
             caretPos,
-            moveCaret
+            caretPos,
+            true
           );
+        } else {
+          resultingInput = keyboard.getInput();
         }
 
         return resultingInput;
       };
 
-      module.inputClass = keyboard.options.inputMaskTargetClass || "input";
-      module.currentButton = "";
-      module.fn = {};
+      module.validateInputProposal = (inputProposal, caretPos) => {
+        const inputMask = module.getInputMaskStr();
 
-      module.fn.getUpdatedInput = keyboard.utilities.getUpdatedInput;
+        if (
+          inputProposal &&
+          typeof inputProposal === "string" &&
+          inputMask &&
+          typeof inputProposal === "string"
+        ) {
+          let inputPropArr = inputProposal.split("");
+          let i = caretPos || 0;
 
-      keyboard.utilities.getUpdatedInput = (
-        button,
-        input,
-        caretPos,
-        moveCaret
-      ) => {
-        return module.getMaskedInput(button, input, caretPos, moveCaret);
+          return module.isCharAllowed(inputPropArr[i]);
+        } else {
+          return false;
+        }
+      };
+
+      module.isCharAllowed = character => {
+        return character && !!character.match(module.getInputMaskRegex());
+      };
+
+      module.isBksp = button => {
+        return button === "{bksp}" || button === "{backspace}";
+      };
+
+      /**
+       * autoAddSymbol
+       */
+      module.autoAddSymbol = (caretPos, input, button) => {
+        const inputMaskStr = module.getInputMaskStr();
+
+        if (!input.trim() && !caretPos) {
+          caretPos = 0;
+        } else {
+          caretPos = input.length;
+        }
+
+        let inputMaskArr = inputMaskStr.split("");
+
+        //for (let i = caretPos; i < inputMaskArr.length; i++) {
+        if (
+          // If exists in mask
+          typeof inputMaskArr[caretPos] !== "undefined" &&
+          // But it is not according to regex
+          inputMaskArr[caretPos].match(module.getInputMaskRegex()) === null
+        ) {
+          input = keyboard.utilities.addStringAt(
+            input,
+            inputMaskArr[caretPos],
+            caretPos,
+            caretPos,
+            true
+          );
+
+          // if (!keyboard.options.disableCaretPositioning) {
+          //   keyboard.setCaretPosition(i);
+          // }
+
+          return module.autoAddSymbol(caretPos++, input, button);
+        } else {
+          return {
+            input,
+            caretPos
+          };
+        }
+        //}
       };
 
       module.onKeyPressed = e => {
+        if (!module.isMaskingEnabled()) return false;
+
         let isInputTarget = e.target.classList.contains(module.inputClass);
         if (!isInputTarget) return false;
 
         if (keyboard.options.debug) console.log("isInputTarget", isInputTarget);
-
         if (keyboard.options.debug) console.log("input", e);
 
         let layoutKey = keyboard.physicalKeyboard.getSimpleKeyboardLayoutKey(e);
@@ -137,129 +189,40 @@ class SimpleKeyboardInputMask {
         document.removeEventListener("keyup", module.onKeyPressed);
       };
 
-      module.validateInputProposal = (inputProposal, inputMask, caretPos) => {
-        if (
-          inputProposal &&
-          typeof inputProposal === "string" &&
-          inputMask &&
-          typeof inputProposal === "string"
-        ) {
-          let inputPropArr = inputProposal.split("");
-          let validated = true;
-          let i = caretPos || 0;
-
-          for (i = 0; i < inputPropArr.length; i++) {
-            validated = module.isCharAllowed(inputPropArr[i], inputMask[i]);
-          }
-
-          return validated;
-        } else {
-          return false;
-        }
-      };
-
-      module.isCharAllowed = (character, maskCharacter) => {
-        if (!(character && maskCharacter) && character !== "0") {
-          return false;
-        }
-
+      module.fn.getUpdatedInput = keyboard.utilities.getUpdatedInput;
+      keyboard.utilities.getUpdatedInput = (
+        button,
+        input,
+        caretPos,
+        caretPosEnd,
+        moveCaret = false
+      ) => {
         /**
-         * Number check
+         * If masking is enabled for input
          */
-        let numberCheck =
-          module.isNumber(character) && module.isNumber(maskCharacter);
-
-        /**
-         * Letter check
-         */
-        let letterCheck =
-          module.isLetter(character) && module.isLetter(maskCharacter);
-
-        /**
-         * Symbol check
-         */
-        let symbolCheck =
-          // If char not maskChar are numbers or letters
-          !numberCheck &&
-          !letterCheck &&
-          // If char and maskChar are the same
-          character === maskCharacter;
-
-        return numberCheck || letterCheck || symbolCheck;
-      };
-
-      module.isBksp = button => {
-        return button === "{bksp}" || button === "{backspace}";
-      };
-
-      module.isNumber = input => {
-        return (
-          input === "0" ||
-          // If char is a number
-          (!isNaN(Number(input)) &&
-            // If char is not a whitespace
-            input.match(/^\s$/) === null)
-        );
-      };
-
-      module.isLetter = input => {
-        let letterCheckPattern;
-        let defaultCheckPattern = /[a-z]/i;
-
-        if (typeof keyboard.options.letterCheckPattern === "object") {
-          letterCheckPattern =
-            keyboard.options.letterCheckPattern[keyboard.options.inputName] ||
-            defaultCheckPattern;
-        } else {
-          letterCheckPattern =
-            keyboard.options.letterCheckPattern || defaultCheckPattern;
-        }
-
-        return (
-          // If char is a letter
-          input.match(letterCheckPattern)
-        );
-      };
-
-      module.isSymbol = () => {};
-
-      module.autoAddSymbol = (caretPos, input, inputMaskStr, button) => {
-        if (!input.trim() && !caretPos) {
-          caretPos = 0;
-        } else {
-          caretPos = input.length;
-        }
-
-        let inputMaskArr = inputMaskStr.split("");
-
-        for (let i = caretPos; i < inputMaskArr.length; i++) {
-          if (
-            inputMaskArr[i] &&
-            !module.isNumber(inputMaskArr[i]) &&
-            !module.isLetter(inputMaskArr[i]) &&
-            (Number(button) || Number(button) === 0)
-          ) {
-            input = keyboard.utilities.addStringAt(
-              input,
-              inputMaskArr[i],
-              i,
-              false
-            );
-
-            if (!keyboard.options.disableCaretPositioning) {
-              keyboard.caretPosition = keyboard.caretPosition
-                ? keyboard.caretPosition + 1
-                : 1;
+        if (module.isMaskingEnabled() && !module.isBksp(button)) {
+          /**
+           * Enforce maxLength
+           */
+          const { maxLength = {}, inputName } = keyboard.options;
+          keyboard.setOptions({
+            maxLength: {
+              ...maxLength,
+              [inputName]: module.getInputMaskStr().length
             }
-          } else {
-            break;
-          }
-        }
+          });
 
-        return {
-          input: input,
-          caretPos: keyboard.caretPosition
-        };
+          var ipt = module.getMaskedInput(button, input, caretPos);
+          return ipt;
+        } else {
+          return module.fn.getUpdatedInput(
+            button,
+            input,
+            caretPos,
+            caretPosEnd,
+            moveCaret
+          );
+        }
       };
 
       /**

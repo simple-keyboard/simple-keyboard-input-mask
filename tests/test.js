@@ -11,7 +11,12 @@ it('Keyboard renders without crashing', () => {
     debug: true,
     onChange: input => input,
     onKeyPress: button => button,
-    inputMask: "(99) 9999-9999",
+    inputMask: {
+      "default": {
+        mask: '(99) 9999-9999',
+        regex: /^[0-9]+$/
+      }
+    },
     useMouseEvents: true,
     modules: [
       SimpleKeyboardInputMask

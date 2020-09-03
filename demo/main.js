@@ -1,5 +1,6 @@
 let Keyboard = window.SimpleKeyboard.default;
 let inputMask = window.SimpleKeyboardInputMask.default;
+let selectedInput;
 
 let keyboard = new Keyboard({
   onChange: input => onChange(input),
@@ -9,9 +10,20 @@ let keyboard = new Keyboard({
     console.log("Module loaded!");
   },
   //debug: true,
-  inputMask: "(99) 9999-9999",
   inputMaskPhysicalKeyboardHandling: true,
-  inputMaskTargetClass: "input",
+  inputMaskTargetClass: "input", // Related to "inputMaskPhysicalKeyboardHandling". The input element handled by simple-keyboard must have this class.
+  inputMask: {
+    "input2": {
+      mask: '+1 (999) 999-9999',
+      regex: /^[0-9]+$/
+    },
+    "input3": {
+      mask: 'abcde-fghi-0000-00',
+      regex: /^[a-z0-9]+$/
+    }
+  },
+  //inputMaskPhysicalKeyboardHandling: true,
+  //inputMaskTargetClass: "input",
   layout: {
     default: [
       "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
@@ -37,9 +49,30 @@ let keyboard = new Keyboard({
   keyboard.setInput(event.target.value);
 });*/
 
+function onInputChange(event) {
+  // if(!keyboard.modules.inputMask.isMaskingEnabled()){
+  //   keyboard.setInput(event.target.value, event.target.id);
+  // }
+}
+
+document.querySelectorAll(".input").forEach(input => {
+  input.addEventListener("focus", onInputFocus);
+  // Optional: Use if you want to track input changes
+  // made without simple-keyboard
+  input.addEventListener("input", onInputChange);
+});
+
+function onInputFocus(event) {
+  selectedInput = `#${event.target.id}`;
+
+  keyboard.setOptions({
+    inputName: event.target.id
+  });
+}
+
 function onChange(input) {
-  document.querySelector(".input").value = input;
   console.log("Input changed", input);
+  document.querySelector(selectedInput || ".input").value = input;
 }
 
 function onKeyPress(button) {
