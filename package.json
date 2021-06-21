@@ -1,6 +1,6 @@
 {
   "name": "simple-keyboard-input-mask",
-  "version": "3.0.228",
+  "version": "3.0.229",
   "description": "Input mask module for simple-keyboard",
   "main": "build/index.js",
   "scripts": {
