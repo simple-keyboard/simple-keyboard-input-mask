@@ -1,6 +1,6 @@
 /*!
  * 
- *   simple-keyboard-input-mask v3.0.301
+ *   simple-keyboard-input-mask v3.0.302
  *   https://github.com/hodgef/simple-keyboard-input-mask
  * 
  *   Copyright (c) Francisco Hodge (https://github.com/hodgef)
