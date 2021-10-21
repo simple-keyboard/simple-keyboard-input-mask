@@ -2,12 +2,24 @@
 
 <blockquote>Input mask module for simple-keyboard</blockquote>
 
+<a href="https://www.npmjs.com/package/simple-keyboard-input-mask">
+    <img src="https://badgen.net/npm/v/simple-keyboard-input-mask?color=blue" alt="npm version">
+  </a>
+	
+  <a href="https://github.com/hodgef/simple-keyboard-input-mask/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT license">
+  </a>
+
  <a href="https://github.com/hodgef/simple-keyboard-input-mask/actions">
      <img alt="Build Status" src="https://github.com/hodgef/simple-keyboard-input-mask/workflows/Build/badge.svg?color=green" />
   </a>
   
   <a href="https://github.com/hodgef/simple-keyboard-input-mask/actions">
      <img alt="Publish Status" src="https://github.com/hodgef/simple-keyboard-input-mask/workflows/Publish/badge.svg?color=green" />
+  </a>
+  
+  <a href="https://gitlab.com/hodgef/simple-keyboard-input-mask" target="_blank">
+     <img alt="Mirroring" src="https://github.com/hodgef/simple-keyboard-input-mask/actions/workflows/mirroring.yml/badge.svg" />
   </a>
 
 ## ✨ Demo
